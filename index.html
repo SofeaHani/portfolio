@@ -1,152 +1,259 @@
-<html>
-<head>
-<title>Design.co website</title>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<style>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>One-Time Pad Cipher</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* General Styling */
+      body {
+        font-family: "Roboto", sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+        color: #fff;
+      }
 
-  h1 {
-    color : Salmon ;
-	text-align  : center ;
-	font-size : 36px;
-	font-weight : 500;
-	 }
-	 
-	 body {
-	 background-color : white ;
-	 box-sizing : border-box;
-	 
-	 }
-	 
-	 img {
-	 width :40%;
-	 height : auto ;
-	 max-width:100%;
-	 display : block;
-	 margin-left : auto;
-	 margin-right : auto;
-	 
-	 }
-	 * {
-	    padding : 0 ;
-		margin: 0;
-		box-sizing : border-box;
-	 }
-	 
-	 /*** For navigation bar **/
-	 .menu-bar 
-	 {
-	   background : rgb(255,202,183);
-	   text-align : center ;
-	 
-	 }
-	 
-	 .menu-bar ul
-	 {
-	     display : inline-flex;
-		 list-style:none ;
-		 color : #fff;
-	 
-	 }
-	 
-	 .menu-bar ul li 
-	 {
-	    width :120px;
-		margin: 10px;
-		padding : 10px;
-	 
-	 }
-	 
-	 .menu-bar ul li a
-	 {
-	   text-decoration : none ;
-	   color : #fff;
-	 }
-	 
-	 .active, menu-bar ul li:hover
-	 {
-	    background: #FA8072;
-		border-radius :4px;
-		
-	 }
-	 
-	 .home {
-	    width: 60%;
-        margin: auto;
-        text-align:center;
-        padding-top: 40px;
-	 }
-	 
-	 /***  For text below heading **/
-	  p{
-        color: #FFAC9C;
-        font-size: 15px;
-        font-weight: 600;
-        line-height: 22px;
+      /* Main Container */
+      .container {
+        background: #fff;
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      /* Success Message */
+      .success-message {
+        visibility: hidden;
+        position: fixed;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #28a745;
+        color: white;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.5s ease-in-out;
+        opacity: 0;
+      }
+
+      .success-message.show {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      /* Headings */
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #6a11cb;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin: 20px 0;
+        color: #2575fc;
+      }
+
+      /* Input Fields */
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        box-sizing: border-box;
+      }
+
+      /* Buttons */
+      input[type="submit"],
+      .copy-btn {
+        width: 30%;
         padding: 10px;
-		font-family : Cambria ;
-	 }
-	 
-	 
-	 .style {
-	    width: 60%;
-        margin: auto;
-        text-align:center;
-        padding-top: 5px;
-	 }
+        margin-top: 10px;
+        background: #6a11cb;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 300;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
 
-	 
-     </style>
-     </head>
-     <body>
-      <h1> Design.co </h1>
-      <div class="menu-bar">
-      <ul>
-      <li class="active"><a href="#home">Home</a></li>
-      <li class="active"><a href="about.html">About </a></li>
-      <li class="active"><a href="style.html">Style</a></li>
-      <li class="active"><a href="Tips and trick.html">Tips and Trick</a></li>
-      <li class="active"><a href="feedback.html">Feedback </a></li>
-      </ul>
+      input[type="submit"]:hover,
+      .copy-btn:hover {
+        background: #2575fc;
+      }
+
+      /* Result Display */
+      .result {
+        margin: 20px 0;
+        padding: 15px;
+        background: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        text-align: left;
+        word-break: break-word;
+      }
+
+      .result.success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .result.error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      /* Media Queries */
+      @media (max-width: 600px) {
+        .container {
+          padding: 15px 20px;
+        }
+
+        h1,
+        h2 {
+          font-size: 1.5rem;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+          font-size: 0.9rem;
+        }
+
+        input[type="submit"],
+        .copy-btn {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+    <script>
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
+
+      function copyToClipboard(text, message) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            showToast(message);
+          })
+          .catch(() => {
+            showToast("Failed to copy to clipboard.");
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Success Message -->
+    <div id="toast" class="success-message"></div>
+
+    <div class="container">
+      <h1>One-Time Pad Cipher</h1>
+
+      <!-- Encryption Form -->
+      <form method="post" action="/encrypt">
+        <h2>Encrypt</h2>
+        <input
+          type="text"
+          name="plaintext"
+          placeholder="Enter plaintext to encrypt"
+          required
+        />
+        <input
+          type="number"
+          name="key_expiry"
+          placeholder="Enter key expiration time (in seconds)"
+          required
+        />
+        <input type="submit" value="Encrypt" />
+      </form>
+
+      {% if result == "success" and action == "Encryption" %}
+      <div class="result success">
+        <strong>Plaintext:</strong> {{ plaintext }}<br />
+        <strong>Ciphertext:</strong> {{ ciphertext }}
+        <button
+          class="copy-btn"
+          onclick="copyToClipboard('{{ ciphertext }}', 'Ciphertext copied!')"
+        >
+          Copy Ciphertext
+        </button>
+        <br />
+        <strong>Key:</strong> {{ key }}
+        <button
+          class="copy-btn"
+          onclick="copyToClipboard('{{ key }}', 'Key copied!')"
+        >
+          Copy Key
+        </button>
+        <br />
+        <strong>Expiration Time:</strong> {{ key_expiration_time }} seconds
       </div>
- 
-      <p style="color:white"> White</p>
+      <script>
+        showToast("Encryption successful!");
+      </script>
+      {% endif %}
 
-      <img src="bed.jpg" width="40" height ="100" />
-  
-      <!-- Home section -->
-      <section class="home">
-      <h1><a name="home"> Home</h1>
-	  <p> Fresh look and aesthetic master bedroom design 
-	      <br>for your dream house in everyday life</p>
-      </section>
-	  
-	  <img src="newbed.jpg" width="20" height ="50" />
-	  <p style="color:white"> New peragraph </p>
-	  <img src="brownbed.jpg" width="20" height ="50" />
-	  <p style="color:white"> New line </p>
-	  <img src="greybed.jpg" width="20" height ="50" />
-	  <p style="color:white"> New line </p>
-	  
-	  
-	  
-	 
-	  
-  
-  
+      <!-- Decryption Form -->
+      <form method="post" action="/decrypt">
+        <h2>Decrypt</h2>
+        <input
+          type="text"
+          name="ciphertext"
+          placeholder="Enter ciphertext"
+          required
+        />
+        <input
+          type="text"
+          name="key"
+          placeholder="Enter decryption key"
+          required
+        />
+        <input type="submit" value="Decrypt" />
+      </form>
 
-  
-  
- 
+      {% if result == "success" and action == "Decryption" %}
+      <div class="result success">
+        <strong>Ciphertext:</strong> {{ ciphertext }}<br />
+        <strong>Key:</strong> {{ key }}<br />
+        <strong>Plaintext:</strong> {{ plaintext }}<br />
+        <strong>Time left:</strong> {{ time_left }} seconds
+      </div>
+      <script>
+        showToast("Decryption successful!");
+      </script>
+      {% endif %}
 
-  
-  
-  
-
-  
- 
-
-
-
-
-</body>
+      <!-- Error Handling -->
+      {% if result == "error" %}
+      <div class="result error"><strong>Error:</strong> {{ error }}</div>
+      {% endif %}
+    </div>
+  </body>
 </html>
